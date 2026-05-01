@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFB84D"/>
+            <corners android:radius="24dp"/>
+        </shape>
+    </item>
+    <!-- Painel -->
+    <item android:top="6dp" android:bottom="6dp" android:left="6dp" android:right="6dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#F5F5DC"/>
+            <corners android:radius="18dp"/>
+            <stroke android:width="3dp" android:color="#FF8C00"/>
+        </shape>
+    </item>
+</layer-list>

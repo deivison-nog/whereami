@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Where Am I Colors -->
+    <color name="wood_dark">#4A2C2A</color>
+    <color name="wood_medium">#6B4423</color>
+    <color name="wood_light">#8B5A2B</color>
+    <color name="button_blue">#3A72B0</color>
+    <color name="button_blue_dark">#2A5280</color>
+    <color name="question_yellow">#FFD700</color>
+    <color name="orange_glow">#FFB84D</color>
+    <color name="orange_border">#FF8C00</color>
+    <color name="score_text">#FFF8DC</color>
+</resources>

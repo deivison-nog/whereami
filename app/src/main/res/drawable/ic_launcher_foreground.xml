@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Círculo externo dourado -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,54m-46,0a46,46 0,1 1,92 0a46,46 0,1 1,-92 0"/>
+    
+    <!-- Círculo interno azul -->
+    <path
+        android:fillColor="#4A90E2"
+        android:pathData="M54,54m-42,0a42,42 0,1 1,84 0a42,42 0,1 1,-84 0"/>
+    
+    <!-- Grid 4x4 representando o jogo -->
+    <group>
+        <!-- Linha 1 -->
+        <path android:fillColor="#FFD700" android:pathData="M32,32h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M42,32h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M52,32h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M62,32h6v6h-6z"/>
+        
+        <!-- Linha 2 -->
+        <path android:fillColor="#FFD700" android:pathData="M32,42h6v6h-6z"/>
+        <path android:fillColor="#FF8C00" android:pathData="M42,42h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M52,42h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M62,42h6v6h-6z"/>
+        
+        <!-- Linha 3 -->
+        <path android:fillColor="#FFD700" android:pathData="M32,52h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M42,52h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M52,52h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M62,52h6v6h-6z"/>
+        
+        <!-- Linha 4 -->
+        <path android:fillColor="#FFD700" android:pathData="M32,62h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M42,62h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M52,62h6v6h-6z"/>
+        <path android:fillColor="#FFD700" android:pathData="M62,62h6v6h-6z"/>
+    </group>
+    
+    <!-- Pin de localização no centro -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M54,40c-3,0 -5,2 -5,5c0,5 5,10 5,10s5,-5 5,-10C59,42 57,40 54,40z"/>
+    
+    <!-- Texto "?" -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52,70h4v4h-4z"/>
+</vector>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/waiting_panel"
+    android:padding="32dp">
+
+    <!-- Ícone de Alerta -->
+    <TextView
+        android:id="@+id/tvExitIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="⚠️"
+        android:textSize="64sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvExitTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SAIR DO JOGO?"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FF8C00"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tvExitIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Mensagem -->
+    <TextView
+        android:id="@+id/tvExitMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Se você sair agora, a partida será encerrada e seu oponente será notificado."
+        android:textSize="16sp"
+        android:textColor="#8B4513"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tvExitTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Container de Botões -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvExitMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp">
+
+        <!-- Botão Cancelar -->
+        <Button
+            android:id="@+id/btnExitCancel"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="❌ CANCELAR"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/button_menu"
+            android:elevation="4dp"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Botão Sair -->
+        <Button
+            android:id="@+id/btnExitConfirm"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="🚪 SAIR"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/button_primary"
+            android:elevation="4dp"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
