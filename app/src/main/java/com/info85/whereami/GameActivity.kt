@@ -591,7 +591,7 @@ class GameActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
-        Thread { NetworkManager.reset() }.start()
+        messageSender.execute { NetworkManager.reset() }
     }
 
     private fun showGameOver() {
@@ -671,7 +671,7 @@ class GameActivity : AppCompatActivity() {
         finish()
 
         // Limpar conexões em segundo plano (não bloqueia a UI)
-        Thread { NetworkManager.reset() }.start()
+        messageSender.execute { NetworkManager.reset() }
     }
 
     override fun onDestroy() {
