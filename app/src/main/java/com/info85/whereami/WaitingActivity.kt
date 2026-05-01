@@ -191,76 +191,63 @@ class WaitingActivity : AppCompatActivity() {
 
         Thread {
             try {
-                val client = GameClient()
-                NetworkManager.gameClient = client
+                // Reusa cliente já conectado (vindo de ServerListActivity) ou cria novo
+                var client = NetworkManager.gameClient
 
-                Log.d(TAG, "📡 Attempting connection...")
-                val success = client.connect(serverIp)
+                if (client == null) {
+                    client = GameClient()
+                    NetworkManager.gameClient = client
 
-                if (!success) {
-                    Log.e(TAG, "❌ Connection failed!")
-                    runOnUiThread {
-                        tvStatus.text = "❌ Falha ao conectar ao servidor"
-                        Toast.makeText(this, "❌ Não foi possível conectar", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "📡 Attempting connection...")
+                    val success = client.connect(serverIp)
 
-                        tvStatus.postDelayed({
-                            finish()
-                        }, 2000)
+                    if (!success) {
+                        Log.e(TAG, "❌ Connection failed!")
+                        runOnUiThread {
+                            tvStatus.text = "❌ Falha ao conectar ao servidor"
+                            Toast.makeText(this, "❌ Não foi possível conectar", Toast.LENGTH_SHORT).show()
+                            tvStatus.postDelayed({ finish() }, 2000)
+                        }
+                        return@Thread
                     }
-                    return@Thread
+                    Log.d(TAG, "✅ TCP connection established!")
+                } else {
+                    Log.d(TAG, "✅ Reusing existing connection from ServerListActivity")
                 }
-
-                Log.d(TAG, "✅ TCP connection established!")
 
                 runOnUiThread {
                     tvStatus.text = "✅ Conectado! Enviando sinal..."
                     Toast.makeText(this, "✅ Conectado!", Toast.LENGTH_SHORT).show()
                 }
 
-                // ✅ Aguardar estabilização
-                Log.d(TAG, "⏳ Waiting 1 second for connection to stabilize...")
-                Thread.sleep(1000)
+                Log.d(TAG, "⏳ Waiting 500ms for connection to stabilize...")
+                Thread.sleep(500)
 
-                // ✅ Enviar ClientReady
-                Log.d(TAG, "📤 ========================================")
                 Log.d(TAG, "📤 SENDING CLIENT_READY MESSAGE")
-
                 val readyMessage = GameMessage.ClientReady(true)
-                Log.d(TAG, "📤 Message object: $readyMessage")
                 Log.d(TAG, "📤 Message type field: ${readyMessage.type}")
-
                 client.sendMessage(readyMessage)
-
                 Log.d(TAG, "📤 CLIENT_READY sent!")
-                Log.d(TAG, "📤 ========================================")
 
                 runOnUiThread {
                     tvStatus.text = "⏳ Aguardando servidor..."
                 }
 
-                // ✅ Aguardar e iniciar o jogo
                 Log.d(TAG, "⏳ Waiting 2 seconds before starting game...")
                 Thread.sleep(2000)
 
                 runOnUiThread {
                     Log.d(TAG, "🎮 Starting game as Player 2...")
-                    startGame(false) // Client é sempre Player 2
+                    startGame(false)
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ ========================================")
-                Log.e(TAG, "❌ CONNECTION ERROR!")
-                Log.e(TAG, "❌ Error: ${e.message}")
+                Log.e(TAG, "❌ CONNECTION ERROR: ${e.message}")
                 e.printStackTrace()
-                Log.e(TAG, "❌ ========================================")
-
                 runOnUiThread {
                     tvStatus.text = "❌ Erro ao conectar:\n${e.message}"
                     Toast.makeText(this, "❌ Erro: ${e.message}", Toast.LENGTH_SHORT).show()
-
-                    tvStatus.postDelayed({
-                        finish()
-                    }, 3000)
+                    tvStatus.postDelayed({ finish() }, 3000)
                 }
             }
         }.start()

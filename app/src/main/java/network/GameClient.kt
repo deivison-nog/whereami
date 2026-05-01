@@ -123,12 +123,15 @@ class GameClient {
                             try {
                                 val baseMessage = gson.fromJson(json, GameMessage.BaseMessage::class.java)
                                 val message = when (baseMessage.type) {
-                                    "EmojiSync" -> gson.fromJson(json, GameMessage.EmojiSync::class.java)
-                                    "SquareSelected" -> gson.fromJson(json, GameMessage.SquareSelected::class.java)
-                                    "GuessResult" -> gson.fromJson(json, GameMessage.GuessResult::class.java)
-                                    "GameOver" -> gson.fromJson(json, GameMessage.GameOver::class.java)
-                                    "PlayerDisconnected" -> gson.fromJson(json, GameMessage.PlayerDisconnected::class.java)
-                                    else -> null
+                                    "EMOJI_SYNC" -> gson.fromJson(json, GameMessage.EmojiSync::class.java)
+                                    "SQUARE_SELECTED" -> gson.fromJson(json, GameMessage.SquareSelected::class.java)
+                                    "GUESS_RESULT" -> gson.fromJson(json, GameMessage.GuessResult::class.java)
+                                    "GAME_OVER" -> gson.fromJson(json, GameMessage.GameOver::class.java)
+                                    "PLAYER_DISCONNECTED" -> gson.fromJson(json, GameMessage.PlayerDisconnected::class.java)
+                                    else -> {
+                                        Log.w(TAG, "Unknown message type: ${baseMessage.type}")
+                                        null
+                                    }
                                 }
 
                                 message?.let { messageListener?.invoke(it) }
