@@ -101,20 +101,16 @@ class GameActivity : AppCompatActivity() {
             setupGrid()
             updateUI()
 
-            // ✅ IMPORTANTE: Enviar EmojiSync imediatamente para sincronizar com cliente
-            Log.d(TAG, "📤 Server: Scheduling EmojiSync to be sent to client...")
-            gridLayout.postDelayed({
-                Log.d(TAG, "📤 Server: Sending EmojiSync now...")
-                sendEmojiSync()
-                Log.d(TAG, "✅ EmojiSync sent to client!")
-            }, 1000) // Delay de 1 segundo para garantir que cliente também iniciou GameActivity
+            // EmojiSync is sent only when CLIENT_READY is received from the client's GameActivity
+            Log.d(TAG, "⏳ Server: Waiting for CLIENT_READY from client GameActivity to send EmojiSync...")
 
         } else {
             Log.d(TAG, "⏳ Player 2 (Client): Waiting for EmojiSync from server...")
             tvStatus.text = "⏳ Sincronizando com servidor..."
 
-            // Cliente apenas aguarda receber EmojiSync
-            // ClientReady já foi enviado no WaitingActivity
+            // Notify server that client GameActivity is ready and request EmojiSync
+            Log.d(TAG, "📤 Client: Sending CLIENT_READY to request EmojiSync...")
+            sendMessage(GameMessage.ClientReady(true))
         }
     }
 
@@ -450,8 +446,12 @@ class GameActivity : AppCompatActivity() {
                     Log.d(TAG, "<<< Received PLAYER_DISCONNECTED")
                     showDisconnectDialog()
                 }
-                // ✅ REMOVIDO: ClientReady não é mais tratado aqui
-                // Já foi processado no WaitingActivity
+                is GameMessage.ClientReady -> {
+                    Log.d(TAG, "<<< Received CLIENT_READY from client GameActivity - sending EmojiSync")
+                    if (gameState.isPlayer1) {
+                        sendEmojiSync()
+                    }
+                }
                 is GameMessage.EmojiSync -> {
                     Log.d(TAG, "📥 <<< Received EMOJI_SYNC with ${message.emojis.size} emojis")
                     Log.d(TAG, "📥 Emojis received: ${message.emojis}")
