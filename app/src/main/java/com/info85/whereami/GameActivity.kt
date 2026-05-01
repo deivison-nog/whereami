@@ -587,11 +587,11 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun returnToMainMenu() {
-        NetworkManager.reset()
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+        Thread { NetworkManager.reset() }.start()
     }
 
     private fun showGameOver() {
@@ -664,14 +664,14 @@ class GameActivity : AppCompatActivity() {
             sendMessage(GameMessage.PlayerDisconnected("quit"))
         }
 
-        // Limpar conexões
-        NetworkManager.reset()
-
-        // Voltar para o menu principal
+        // Voltar para o menu principal imediatamente para evitar bloqueio da UI
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+
+        // Limpar conexões em segundo plano (não bloqueia a UI)
+        Thread { NetworkManager.reset() }.start()
     }
 
     override fun onDestroy() {

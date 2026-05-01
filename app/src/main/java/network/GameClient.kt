@@ -145,6 +145,12 @@ class GameClient {
                 } finally {
                     Log.d(TAG, "🔌 Disconnected from server")
                     isConnected = false
+                    // Close I/O resources here so disconnect() on the main thread
+                    // never needs to call reader.close() (which would deadlock
+                    // because BufferedReader.readLine() and close() share a lock).
+                    try { reader?.close() } catch (e: Exception) { Log.e(TAG, "Error closing reader: ${e.message}") }
+                    try { writer?.close() } catch (e: Exception) { Log.e(TAG, "Error closing writer: ${e.message}") }
+                    try { socket?.close() } catch (e: Exception) { Log.e(TAG, "Error closing socket: ${e.message}") }
                     disconnectListener?.invoke()
                 }
             }
@@ -179,8 +185,12 @@ class GameClient {
         Log.d(TAG, "🛑 Disconnecting...")
         isConnected = false
         try {
-            reader?.close()
-            writer?.close()
+            // Close only the socket. This unblocks any readLine() call on the
+            // background read thread via SocketException, which lets that thread's
+            // finally block close the reader and writer safely.
+            // Do NOT close reader/writer here: BufferedReader.close() and
+            // readLine() share a lock, so calling close() from the main thread
+            // while readLine() is blocked would deadlock and cause an ANR.
             socket?.close()
         } catch (e: Exception) {
             Log.e(TAG, "Error disconnecting: ${e.message}")
