@@ -151,8 +151,11 @@ class WaitingActivity : AppCompatActivity() {
         Log.d(TAG, "🖥️ STARTING SERVER")
         Log.d(TAG, "🖥️ ========================================")
 
-        val server = GameServer()
-        NetworkManager.gameServer = server
+        // Reuse the server already created and started by MainActivity, or start a new one
+        val server = NetworkManager.gameServer ?: GameServer().also { s ->
+            NetworkManager.gameServer = s
+            s.start()
+        }
 
         // ✅ Configurar listener ANTES de iniciar
         server.setMessageListener { message ->
@@ -178,10 +181,7 @@ class WaitingActivity : AppCompatActivity() {
             }
         }
 
-        // Iniciar servidor
-        server.start()
-
-        Log.d(TAG, "✅ Server thread started, waiting for connections...")
+        Log.d(TAG, "✅ Server listener configured, waiting for connections...")
     }
 
     private fun connectToServer(serverIp: String) {
