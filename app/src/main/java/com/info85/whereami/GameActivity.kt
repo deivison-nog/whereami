@@ -109,8 +109,9 @@ class GameActivity : AppCompatActivity() {
             tvStatus.text = "⏳ Sincronizando com servidor..."
 
             // Notify server that client GameActivity is ready and request EmojiSync
+            // Must be done off the main thread - network I/O is forbidden on Android's main thread
             Log.d(TAG, "📤 Client: Sending CLIENT_READY to request EmojiSync...")
-            sendMessage(GameMessage.ClientReady(true))
+            Thread { sendMessage(GameMessage.ClientReady(true)) }.start()
         }
     }
 
