@@ -109,9 +109,8 @@ class GameActivity : AppCompatActivity() {
             tvStatus.text = "⏳ Sincronizando com servidor..."
 
             // Notify server that client GameActivity is ready and request EmojiSync
-            // Must be done off the main thread - network I/O is forbidden on Android's main thread
             Log.d(TAG, "📤 Client: Sending CLIENT_READY to request EmojiSync...")
-            Thread { sendMessage(GameMessage.ClientReady(true)) }.start()
+            sendMessage(GameMessage.ClientReady(true))
         }
     }
 
@@ -536,12 +535,14 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(message: GameMessage) {
-        Log.d(TAG, "📤 >>> Sending message: ${message::class.simpleName}")
-        if (NetworkManager.isServer) {
-            NetworkManager.gameServer?.sendMessage(message)
-        } else {
-            NetworkManager.gameClient?.sendMessage(message)
-        }
+        Thread {
+            Log.d(TAG, "📤 >>> Sending message: ${message::class.simpleName}")
+            if (NetworkManager.isServer) {
+                NetworkManager.gameServer?.sendMessage(message)
+            } else {
+                NetworkManager.gameClient?.sendMessage(message)
+            }
+        }.start()
     }
 
     private fun sendGameOver() {
