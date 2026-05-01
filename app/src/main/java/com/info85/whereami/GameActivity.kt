@@ -21,6 +21,7 @@ import com.info85.whereami.models.GameState
 import com.info85.whereami.network.GameMessage
 import com.info85.whereami.network.NetworkManager
 import android.view.WindowManager
+import java.util.concurrent.Executors
 
 class GameActivity : AppCompatActivity() {
     private lateinit var gridLayout: GridLayout
@@ -35,6 +36,9 @@ class GameActivity : AppCompatActivity() {
 
     // Flag para bloquear cliques durante animação
     private var isAnimatingMessage = false
+
+    // Executor dedicado para envio de mensagens de rede (evita I/O na thread principal)
+    private val messageSender = Executors.newSingleThreadExecutor()
 
     // Lista de emojis de lugares do dia-a-dia
     private val emojis = listOf(
@@ -535,14 +539,14 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(message: GameMessage) {
-        Thread {
+        messageSender.execute {
             Log.d(TAG, "📤 >>> Sending message: ${message::class.simpleName}")
             if (NetworkManager.isServer) {
                 NetworkManager.gameServer?.sendMessage(message)
             } else {
                 NetworkManager.gameClient?.sendMessage(message)
             }
-        }.start()
+        }
     }
 
     private fun sendGameOver() {
@@ -677,5 +681,7 @@ class GameActivity : AppCompatActivity() {
         // Fechar diálogos se estiverem abertos
         exitDialog?.dismiss()
         disconnectDialog?.dismiss()
+
+        messageSender.shutdown()
     }
 }
