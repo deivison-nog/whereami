@@ -107,48 +107,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"/>
 
-        <!-- Container de Botões -->
-        <LinearLayout
-            android:id="@+id/buttonContainer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/tvIpInstruction"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp">
-
-            <!-- Botão Copiar IP -->
-            <Button
-                android:id="@+id/btnCopyIp"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:text="📋 COPIAR"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/button_primary"
-                android:elevation="4dp"
-                android:layout_marginEnd="8dp"/>
-
-            <!-- Botão Compartilhar IP -->
-            <Button
-                android:id="@+id/btnShareIp"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:text="📤 ENVIAR"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/button_primary"
-                android:elevation="4dp"
-                android:layout_marginStart="8dp"/>
-
-        </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Painel de Espera -->

@@ -1,7 +1,5 @@
 package com.info85.whereami
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
@@ -9,7 +7,6 @@ import android.os.Bundle
 import android.text.format.Formatter
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +20,6 @@ class WaitingActivity : AppCompatActivity() {
     private lateinit var tvStatus: TextView
     private lateinit var ipPanel: ConstraintLayout
     private lateinit var tvIpAddress: TextView
-    private lateinit var btnCopyIp: Button
-    private lateinit var btnShareIp: Button
     private var isServer = false
     private var localIp: String = ""
 
@@ -39,8 +34,6 @@ class WaitingActivity : AppCompatActivity() {
         tvStatus = findViewById(R.id.tvStatus)
         ipPanel = findViewById(R.id.ipPanel)
         tvIpAddress = findViewById(R.id.tvIpAddress)
-        btnCopyIp = findViewById(R.id.btnCopyIp)
-        btnShareIp = findViewById(R.id.btnShareIp)
 
         isServer = intent.getBooleanExtra("IS_SERVER", false)
         NetworkManager.isServer = isServer
@@ -61,14 +54,6 @@ class WaitingActivity : AppCompatActivity() {
             tvStatus.text = "📡 Conectando ao servidor..."
             ipPanel.visibility = View.GONE
             connectToServer(serverIp)
-        }
-
-        btnCopyIp.setOnClickListener {
-            copyIpToClipboard()
-        }
-
-        btnShareIp.setOnClickListener {
-            shareIp()
         }
     }
 
@@ -122,28 +107,6 @@ class WaitingActivity : AppCompatActivity() {
             Log.e(TAG, "Error in getIpFromNetworkInterface: ${e.message}")
         }
         return null
-    }
-
-    private fun copyIpToClipboard() {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("IP Address", localIp)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "📋 IP copiado: $localIp", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun shareIp() {
-        val shareText = "🎮 Vamos jogar Where Am I!\n\n" +
-                "Entre no jogo e digite este IP:\n" +
-                "📍 $localIp\n\n" +
-                "Nos vemos no jogo! 🎯"
-
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, shareText)
-            type = "text/plain"
-        }
-
-        startActivity(Intent.createChooser(shareIntent, "Compartilhar IP com oponente"))
     }
 
     private fun startServer() {
