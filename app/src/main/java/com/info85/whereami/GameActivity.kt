@@ -173,7 +173,7 @@ class GameActivity : AppCompatActivity() {
             // Detectar desconexão do cliente
             NetworkManager.gameServer?.setDisconnectListener {
                 Log.d(TAG, "🔌 Client disconnected!")
-                showDisconnectDialog()
+                runOnUiThread { showDisconnectDialog() }
             }
         } else {
             NetworkManager.gameClient?.setMessageListener { message ->
@@ -184,7 +184,7 @@ class GameActivity : AppCompatActivity() {
             // Detectar desconexão do servidor
             NetworkManager.gameClient?.setDisconnectListener {
                 Log.d(TAG, "🔌 Server disconnected!")
-                showDisconnectDialog()
+                runOnUiThread { showDisconnectDialog() }
             }
         }
         Log.d(TAG, "✅ Network listener configured")
