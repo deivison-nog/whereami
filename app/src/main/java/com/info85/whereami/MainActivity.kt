@@ -11,6 +11,7 @@ import com.info85.whereami.network.NetworkManager
 class MainActivity : AppCompatActivity() {
     private lateinit var btnCreateServer: Button
     private lateinit var btnJoinServer: Button
+    private lateinit var btnAbout: Button
 
     companion object {
         private const val TAG = "MainActivity"
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         btnCreateServer = findViewById(R.id.btnCreateServer)
         btnJoinServer = findViewById(R.id.btnJoinServer)
+        btnAbout = findViewById(R.id.btnAbout)
 
         btnCreateServer.setOnClickListener {
             createServer()
@@ -29,6 +31,11 @@ class MainActivity : AppCompatActivity() {
 
         btnJoinServer.setOnClickListener {
             val intent = Intent(this, ServerListActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnAbout.setOnClickListener {
+            val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
         }
     }

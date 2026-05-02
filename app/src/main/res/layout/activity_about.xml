@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    android:padding="24dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvAboutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ℹ️ SOBRE"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="#FF8C00"
+        android:shadowColor="#000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="5"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"/>
+
+    <!-- Painel de conteúdo -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/tvAboutTitle"
+        app:layout_constraintBottom_toTopOf="@id/btnBack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/waiting_panel"
+            android:padding="20dp">
+
+            <!-- O que é o jogo -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎮 O QUE É O JOGO?"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#8B4513"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Where Am I? é um jogo multiplayer local onde dois jogadores, conectados na mesma rede WiFi, tentam adivinhar a localização um do outro em um mapa de grade."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FF8C00"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Como jogar -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📋 COMO JOGAR"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#8B4513"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1️⃣  Um jogador cria um servidor tocando em CRIAR SERVIDOR."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2️⃣  O outro jogador toca em BUSCAR SERVIDOR e seleciona o servidor na lista."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3️⃣  Quando os dois estiverem conectados, o jogo começa automaticamente."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4️⃣  Cada jogador escolhe secretamente sua posição no mapa."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5️⃣  Toque em uma célula do mapa para tentar adivinhar onde o oponente está."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="6️⃣  Quem adivinhar primeiro a posição do oponente vence!"
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FF8C00"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Requisitos -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📶 REQUISITOS"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#8B4513"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Dois dispositivos Android\n• Ambos conectados na mesma rede WiFi"
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#FF8C00"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Dica -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="💡 DICA"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#8B4513"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Certifique-se de que ambos os dispositivos estejam na mesma rede WiFi antes de iniciar. Redes móveis (4G/5G) não funcionam para a conexão local."
+                android:textSize="14sp"
+                android:textColor="#5C3317"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Botão Voltar -->
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:text="⬅️ VOLTAR"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_primary"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

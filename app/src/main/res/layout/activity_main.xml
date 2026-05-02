@@ -87,6 +87,19 @@
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:background="@drawable/button_primary"
+            android:elevation="8dp"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Botão Sobre -->
+        <Button
+            android:id="@+id/btnAbout"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="ℹ️ SOBRE"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/button_primary"
             android:elevation="8dp"/>
 
     </LinearLayout>

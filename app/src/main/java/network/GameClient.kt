@@ -123,12 +123,15 @@ class GameClient {
                             try {
                                 val baseMessage = gson.fromJson(json, GameMessage.BaseMessage::class.java)
                                 val message = when (baseMessage.type) {
-                                    "EmojiSync" -> gson.fromJson(json, GameMessage.EmojiSync::class.java)
-                                    "SquareSelected" -> gson.fromJson(json, GameMessage.SquareSelected::class.java)
-                                    "GuessResult" -> gson.fromJson(json, GameMessage.GuessResult::class.java)
-                                    "GameOver" -> gson.fromJson(json, GameMessage.GameOver::class.java)
-                                    "PlayerDisconnected" -> gson.fromJson(json, GameMessage.PlayerDisconnected::class.java)
-                                    else -> null
+                                    "EMOJI_SYNC" -> gson.fromJson(json, GameMessage.EmojiSync::class.java)
+                                    "SQUARE_SELECTED" -> gson.fromJson(json, GameMessage.SquareSelected::class.java)
+                                    "GUESS_RESULT" -> gson.fromJson(json, GameMessage.GuessResult::class.java)
+                                    "GAME_OVER" -> gson.fromJson(json, GameMessage.GameOver::class.java)
+                                    "PLAYER_DISCONNECTED" -> gson.fromJson(json, GameMessage.PlayerDisconnected::class.java)
+                                    else -> {
+                                        Log.w(TAG, "Unknown message type: ${baseMessage.type}")
+                                        null
+                                    }
                                 }
 
                                 message?.let { messageListener?.invoke(it) }
@@ -142,6 +145,12 @@ class GameClient {
                 } finally {
                     Log.d(TAG, "🔌 Disconnected from server")
                     isConnected = false
+                    // Close I/O resources here so disconnect() on the main thread
+                    // never needs to call reader.close() (which would deadlock
+                    // because BufferedReader.readLine() and close() share a lock).
+                    try { reader?.close() } catch (e: Exception) { Log.e(TAG, "Error closing reader: ${e.message}") }
+                    try { writer?.close() } catch (e: Exception) { Log.e(TAG, "Error closing writer: ${e.message}") }
+                    try { socket?.close() } catch (e: Exception) { Log.e(TAG, "Error closing socket: ${e.message}") }
                     disconnectListener?.invoke()
                 }
             }
@@ -176,8 +185,12 @@ class GameClient {
         Log.d(TAG, "🛑 Disconnecting...")
         isConnected = false
         try {
-            reader?.close()
-            writer?.close()
+            // Close only the socket. This unblocks any readLine() call on the
+            // background read thread via SocketException, which lets that thread's
+            // finally block close the reader and writer safely.
+            // Do NOT close reader/writer here: BufferedReader.close() and
+            // readLine() share a lock, so calling close() from the main thread
+            // while readLine() is blocked would deadlock and cause an ANR.
             socket?.close()
         } catch (e: Exception) {
             Log.e(TAG, "Error disconnecting: ${e.message}")

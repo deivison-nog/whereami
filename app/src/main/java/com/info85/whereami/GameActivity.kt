@@ -21,6 +21,7 @@ import com.info85.whereami.models.GameState
 import com.info85.whereami.network.GameMessage
 import com.info85.whereami.network.NetworkManager
 import android.view.WindowManager
+import java.util.concurrent.Executors
 
 class GameActivity : AppCompatActivity() {
     private lateinit var gridLayout: GridLayout
@@ -35,6 +36,9 @@ class GameActivity : AppCompatActivity() {
 
     // Flag para bloquear cliques durante animação
     private var isAnimatingMessage = false
+
+    // Executor dedicado para envio de mensagens de rede (evita I/O na thread principal)
+    private val messageSender = Executors.newSingleThreadExecutor()
 
     // Lista de emojis de lugares do dia-a-dia
     private val emojis = listOf(
@@ -101,20 +105,16 @@ class GameActivity : AppCompatActivity() {
             setupGrid()
             updateUI()
 
-            // ✅ IMPORTANTE: Enviar EmojiSync imediatamente para sincronizar com cliente
-            Log.d(TAG, "📤 Server: Scheduling EmojiSync to be sent to client...")
-            gridLayout.postDelayed({
-                Log.d(TAG, "📤 Server: Sending EmojiSync now...")
-                sendEmojiSync()
-                Log.d(TAG, "✅ EmojiSync sent to client!")
-            }, 1000) // Delay de 1 segundo para garantir que cliente também iniciou GameActivity
+            // EmojiSync is sent only when CLIENT_READY is received from the client's GameActivity
+            Log.d(TAG, "⏳ Server: Waiting for CLIENT_READY from client GameActivity to send EmojiSync...")
 
         } else {
             Log.d(TAG, "⏳ Player 2 (Client): Waiting for EmojiSync from server...")
             tvStatus.text = "⏳ Sincronizando com servidor..."
 
-            // Cliente apenas aguarda receber EmojiSync
-            // ClientReady já foi enviado no WaitingActivity
+            // Notify server that client GameActivity is ready and request EmojiSync
+            Log.d(TAG, "📤 Client: Sending CLIENT_READY to request EmojiSync...")
+            sendMessage(GameMessage.ClientReady(true))
         }
     }
 
@@ -173,7 +173,7 @@ class GameActivity : AppCompatActivity() {
             // Detectar desconexão do cliente
             NetworkManager.gameServer?.setDisconnectListener {
                 Log.d(TAG, "🔌 Client disconnected!")
-                showDisconnectDialog()
+                runOnUiThread { showDisconnectDialog() }
             }
         } else {
             NetworkManager.gameClient?.setMessageListener { message ->
@@ -184,7 +184,7 @@ class GameActivity : AppCompatActivity() {
             // Detectar desconexão do servidor
             NetworkManager.gameClient?.setDisconnectListener {
                 Log.d(TAG, "🔌 Server disconnected!")
-                showDisconnectDialog()
+                runOnUiThread { showDisconnectDialog() }
             }
         }
         Log.d(TAG, "✅ Network listener configured")
@@ -450,8 +450,12 @@ class GameActivity : AppCompatActivity() {
                     Log.d(TAG, "<<< Received PLAYER_DISCONNECTED")
                     showDisconnectDialog()
                 }
-                // ✅ REMOVIDO: ClientReady não é mais tratado aqui
-                // Já foi processado no WaitingActivity
+                is GameMessage.ClientReady -> {
+                    Log.d(TAG, "<<< Received CLIENT_READY from client GameActivity - sending EmojiSync")
+                    if (gameState.isPlayer1) {
+                        sendEmojiSync()
+                    }
+                }
                 is GameMessage.EmojiSync -> {
                     Log.d(TAG, "📥 <<< Received EMOJI_SYNC with ${message.emojis.size} emojis")
                     Log.d(TAG, "📥 Emojis received: ${message.emojis}")
@@ -535,11 +539,13 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(message: GameMessage) {
-        Log.d(TAG, "📤 >>> Sending message: ${message::class.simpleName}")
-        if (NetworkManager.isServer) {
-            NetworkManager.gameServer?.sendMessage(message)
-        } else {
-            NetworkManager.gameClient?.sendMessage(message)
+        messageSender.execute {
+            Log.d(TAG, "📤 >>> Sending message: ${message::class.simpleName}")
+            if (NetworkManager.isServer) {
+                NetworkManager.gameServer?.sendMessage(message)
+            } else {
+                NetworkManager.gameClient?.sendMessage(message)
+            }
         }
     }
 
@@ -581,11 +587,11 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun returnToMainMenu() {
-        NetworkManager.reset()
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+        messageSender.execute { NetworkManager.reset() }
     }
 
     private fun showGameOver() {
@@ -658,14 +664,14 @@ class GameActivity : AppCompatActivity() {
             sendMessage(GameMessage.PlayerDisconnected("quit"))
         }
 
-        // Limpar conexões
-        NetworkManager.reset()
-
-        // Voltar para o menu principal
+        // Voltar para o menu principal imediatamente para evitar bloqueio da UI
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+
+        // Limpar conexões em segundo plano (não bloqueia a UI)
+        messageSender.execute { NetworkManager.reset() }
     }
 
     override fun onDestroy() {
@@ -675,5 +681,7 @@ class GameActivity : AppCompatActivity() {
         // Fechar diálogos se estiverem abertos
         exitDialog?.dismiss()
         disconnectDialog?.dismiss()
+
+        messageSender.shutdown()
     }
 }

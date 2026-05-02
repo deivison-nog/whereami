@@ -19,8 +19,6 @@ object NetworkManager {
             Log.d(TAG, "🛑 Shutting down GameServer...")
             try {
                 it.shutdown()
-                // ✅ Aguardar shutdown completar
-                Thread.sleep(300)
             } catch (e: Exception) {
                 Log.e(TAG, "Error shutting down server: ${e.message}")
             }
@@ -32,8 +30,6 @@ object NetworkManager {
             Log.d(TAG, "🔌 Disconnecting GameClient...")
             try {
                 it.disconnect()
-                // ✅ Aguardar desconexão completar
-                Thread.sleep(300)
             } catch (e: Exception) {
                 Log.e(TAG, "Error disconnecting client: ${e.message}")
             }

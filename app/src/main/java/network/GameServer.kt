@@ -188,10 +188,11 @@ class GameServer(private val port: Int = SERVER_PORT) : Thread() {
         isRunning = false
 
         try {
-            // ✅ Fechar tudo na ordem correta
+            // Closing currentClient unblocks readLine() in handleClient() via
+            // SocketException, letting that thread's finally block close reader/writer.
+            // Do NOT close reader/writer here directly: same lock-based deadlock
+            // risk as in GameClient.disconnect().
             currentClient?.close()
-            reader?.close()
-            writer?.close()
 
             // ✅ Interromper thread de discovery
             discoveryThread?.interrupt()
